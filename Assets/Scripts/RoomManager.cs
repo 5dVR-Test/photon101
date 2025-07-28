@@ -4,6 +4,14 @@ using Photon.Pun;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
+
+    public GameObject player;
+
+    [Space]
+    public Transform spawnPoint;
+
+
+
     void Start()
     {
         Debug.Log("Connecting...");
@@ -25,9 +33,21 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedLobby();
 
+        Debug.Log("We're conneted and in lobby");
+
         PhotonNetwork.JoinOrCreateRoom("LazyGame", null, null);
 
+
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+
         Debug.Log("We're conneted and in room");
+
+        GameObject _player = PhotonNetwork.Instantiate(player.name, spawnPoint.position, Quaternion.identity);
+
     }
 
 }
