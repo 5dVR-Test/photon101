@@ -6,19 +6,26 @@ public class Movement : MonoBehaviour
     public float walkSpeed = 4f;
     public float sprintSpeed = 14f;
     public float maxVelocityChange = 18f;
+    
     [Space]
-    public float jumpHeight = 30f;
+    public float airControl = .5f;
+
+    [Space]
+    public float jumpHeight = 5f;
+    
     
 
     private Vector2 input;
     private Rigidbody rb;
 
     private bool sprinting;
-
+    private bool jumping;
+    private bool grounded;
 
     void Start()
     {
          rb = GetComponent<Rigidbody>();
+        grounded = false ;
     }
     void Update()
     {
@@ -26,12 +33,61 @@ public class Movement : MonoBehaviour
         input.Normalize();
 
         sprinting = Input.GetButton("Sprint");
+        jumping = Input.GetButton("Jump");
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        //if (other.gameObject.tag == "Ground")
+        //{
+            grounded = true;
+        //}
     }
 
     private void FixedUpdate()
     {
-        rb.AddForce(CalculateMovement(sprinting ? sprintSpeed : walkSpeed), ForceMode.VelocityChange);
+        if(grounded)
+        {
+            if (jumping)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, y: jumpHeight, rb.linearVelocity.z);
+            }
+
+            else if(input.magnitude > 0.5f)
+            {
+            rb.AddForce(CalculateMovement(sprinting ? sprintSpeed : walkSpeed), ForceMode.VelocityChange);
+            }
+
+            else 
+            { 
+                Vector3 velocity1 = rb.linearVelocity;
+
+                velocity1 =  new Vector3(velocity1.x * .2f * Time.fixedDeltaTime, velocity1.y, velocity1.z * .2f * Time.fixedDeltaTime);
+
+                rb.linearVelocity = velocity1;
+
+            }
+        }
+        else
+        {
+            if (input.magnitude > 0.5f)
+            {
+                rb.AddForce(CalculateMovement(sprinting ? sprintSpeed * airControl : walkSpeed * airControl), ForceMode.VelocityChange);
+            }
+
+            else
+            {
+                Vector3 velocity1 = rb.linearVelocity;
+
+                velocity1 = new Vector3(velocity1.x * .2f * Time.fixedDeltaTime, velocity1.y, velocity1.z * .2f * Time.fixedDeltaTime);
+
+                rb.linearVelocity = velocity1;
+
+            }
+        }
+            grounded = false;
+
     }
 
     Vector3 CalculateMovement(float _speed)
