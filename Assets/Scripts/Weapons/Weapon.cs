@@ -37,7 +37,7 @@ public class Weapon : MonoBehaviour
         {
             if (hit.transform.gameObject.GetComponent<Health>())
             {
-                hit.transform.gameObject.GetComponent<PhotonView>().RPC( "TakeDamage", RpcTarget.All, damage);
+                hit.transform.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All, damage);
             }
         } 
     }
