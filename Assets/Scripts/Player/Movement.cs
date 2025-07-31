@@ -6,14 +6,14 @@ public class Movement : MonoBehaviour
     public float walkSpeed = 4f;
     public float sprintSpeed = 14f;
     public float maxVelocityChange = 18f;
-    
+
     [Space]
     public float airControl = .5f;
 
     [Space]
     public float jumpHeight = 5f;
-    
-    
+
+
 
     private Vector2 input;
     private Rigidbody rb;
@@ -22,12 +22,12 @@ public class Movement : MonoBehaviour
     private bool jumping;
     private bool grounded;
 
-    void Start()
+    private void Start()
     {
-         rb = GetComponent<Rigidbody>();
-        grounded = false ;
+        rb = GetComponent<Rigidbody>();
+        grounded = false;
     }
-    void Update()
+    private void Update()
     {
         input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         input.Normalize();
@@ -41,29 +41,29 @@ public class Movement : MonoBehaviour
     {
         //if (other.gameObject.tag == "Ground")
         //{
-            grounded = true;
+        grounded = true;
         //}
     }
 
     private void FixedUpdate()
     {
-        if(grounded)
+        if (grounded)
         {
             if (jumping)
             {
                 rb.linearVelocity = new Vector3(rb.linearVelocity.x, y: jumpHeight, rb.linearVelocity.z);
             }
 
-            else if(input.magnitude > 0.5f)
+            else if (input.magnitude > 0.5f)
             {
-            rb.AddForce(CalculateMovement(sprinting ? sprintSpeed : walkSpeed), ForceMode.VelocityChange);
+                rb.AddForce(CalculateMovement(sprinting ? sprintSpeed : walkSpeed), ForceMode.VelocityChange);
             }
 
-            else 
-            { 
+            else
+            {
                 Vector3 velocity1 = rb.linearVelocity;
 
-                velocity1 =  new Vector3(velocity1.x * .2f * Time.fixedDeltaTime, velocity1.y, velocity1.z * .2f * Time.fixedDeltaTime);
+                velocity1 = new Vector3(velocity1.x * .2f * Time.fixedDeltaTime, velocity1.y, velocity1.z * .2f * Time.fixedDeltaTime);
 
                 rb.linearVelocity = velocity1;
 
@@ -86,13 +86,13 @@ public class Movement : MonoBehaviour
 
             }
         }
-            grounded = false;
+        grounded = false;
 
     }
 
-    Vector3 CalculateMovement(float _speed)
+    private Vector3 CalculateMovement(float _speed)
     {
-        Vector3 targetVelocity = new Vector3(input.x, 0, input.y);
+        Vector3 targetVelocity = new(input.x, 0, input.y);
         targetVelocity = transform.TransformDirection(targetVelocity);
         targetVelocity *= _speed;
         Vector3 velocity = rb.linearVelocity;
@@ -102,16 +102,16 @@ public class Movement : MonoBehaviour
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
             velocityChange.y = 0;
-            return (velocityChange);
+            return velocityChange;
         }
 
         else
         {
             return new Vector3();
         }
-            
 
-    
+
+
     }
-    
+
 }

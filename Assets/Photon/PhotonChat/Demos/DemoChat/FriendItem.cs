@@ -20,9 +20,7 @@ namespace Photon.Chat.Demo
     {
         [HideInInspector]
         public string FriendId
-        {
-            set { this.NameLabel.text = value; }
-            get { return this.NameLabel.text; }
+        { set => NameLabel.text = value; get => NameLabel.text;
         }
 
         public Text NameLabel;
@@ -31,53 +29,35 @@ namespace Photon.Chat.Demo
 
         public void Awake()
         {
-            this.Health.text = string.Empty;
+            Health.text = string.Empty;
         }
 
         public void OnFriendStatusUpdate(int status, bool gotMessage, object message)
         {
-            string _status;
-
-            switch (status)
+            string _status = status switch
             {
-                case 1:
-                    _status = "Invisible";
-                    break;
-                case 2:
-                    _status = "Online";
-                    break;
-                case 3:
-                    _status = "Away";
-                    break;
-                case 4:
-                    _status = "Do not disturb";
-                    break;
-                case 5:
-                    _status = "Looking For Game/Group";
-                    break;
-                case 6:
-                    _status = "Playing";
-                    break;
-                default:
-                    _status = "Offline";
-                    break;
-            }
-
-            this.StatusLabel.text = _status;
+                1 => "Invisible",
+                2 => "Online",
+                3 => "Away",
+                4 => "Do not disturb",
+                5 => "Looking For Game/Group",
+                6 => "Playing",
+                _ => "Offline",
+            };
+            StatusLabel.text = _status;
 
             if (gotMessage)
             {
                 string _health = string.Empty;
                 if (message != null)
                 {
-                    string[] _messages = message as string[];
-                    if (_messages != null && _messages.Length >= 2)
+                    if (message is string[] _messages && _messages.Length >= 2)
                     {
-                        _health = (string)_messages[1] + "%";
+                        _health = _messages[1] + "%";
                     }
                 }
 
-                this.Health.text = _health;
+                Health.text = _health;
             }
         }
     }

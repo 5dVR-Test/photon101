@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviour
 {
-   
+
     public Movement movement;
 
-    public GameObject camera;
+    public new GameObject camera;
 
 
     public void IsLocalPlayer()
@@ -14,6 +14,6 @@ public class PlayerSetup : MonoBehaviour
         camera.SetActive(true);
     }
 
-    
+
 
 }

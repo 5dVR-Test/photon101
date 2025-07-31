@@ -22,16 +22,16 @@ namespace Photon.Chat.Demo
 
         public void Start()
         {
-            #if UNITY_6000_0_OR_NEWER
-            this.chatNewComponent = FindFirstObjectByType<ChatGui>();
-            #else
+#if UNITY_6000_0_OR_NEWER
+            chatNewComponent = FindFirstObjectByType<ChatGui>();
+#else
             this.chatNewComponent = FindObjectOfType<ChatGui>();
-            #endif
+#endif
 
             string prefsName = PlayerPrefs.GetString(UserNamePlayerPref);
             if (!string.IsNullOrEmpty(prefsName))
             {
-                this.idInput.text = prefsName;
+                idInput.text = prefsName;
             }
         }
 
@@ -41,21 +41,21 @@ namespace Photon.Chat.Demo
         {
             if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
             {
-                this.StartChat();
+                StartChat();
             }
         }
 
         public void StartChat()
         {
-            #if UNITY_6000_0_OR_NEWER
+#if UNITY_6000_0_OR_NEWER
             ChatGui chatNewComponent = FindFirstObjectByType<ChatGui>();
-            #else
+#else
             ChatGui chatNewComponent = FindObjectOfType<ChatGui>();
-            #endif
+#endif
 
-            chatNewComponent.UserName = this.idInput.text.Trim();
+            chatNewComponent.UserName = idInput.text.Trim();
             chatNewComponent.Connect();
-            this.enabled = false;
+            enabled = false;
 
             PlayerPrefs.SetString(UserNamePlayerPref, chatNewComponent.UserName);
         }

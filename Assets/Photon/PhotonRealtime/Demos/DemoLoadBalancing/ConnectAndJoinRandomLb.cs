@@ -5,7 +5,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using ExitGames.Client.Photon;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +13,7 @@ namespace Photon.Realtime.Demo
     public class ConnectAndJoinRandomLb : MonoBehaviour, IConnectionCallbacks, IMatchmakingCallbacks, ILobbyCallbacks
     {
         [SerializeField]
-        private AppSettings appSettings = new AppSettings();
+        private AppSettings appSettings = new();
         private LoadBalancingClient lbc;
 
         private ConnectionHandler ch;
@@ -22,31 +21,31 @@ namespace Photon.Realtime.Demo
 
         public void Start()
         {
-            this.lbc = new LoadBalancingClient();
-            this.lbc.AddCallbackTarget(this);
+            lbc = new LoadBalancingClient();
+            lbc.AddCallbackTarget(this);
 
-            if (!this.lbc.ConnectUsingSettings(appSettings))
+            if (!lbc.ConnectUsingSettings(appSettings))
             {
                 Debug.LogError("Error while connecting");
             }
 
-            this.ch = this.gameObject.GetComponent<ConnectionHandler>();
-            if (this.ch != null)
+            ch = gameObject.GetComponent<ConnectionHandler>();
+            if (ch != null)
             {
-                this.ch.Client = this.lbc;
-                this.ch.StartFallbackSendAckThread();
+                ch.Client = lbc;
+                ch.StartFallbackSendAckThread();
             }
         }
 
         public void Update()
         {
-            LoadBalancingClient client = this.lbc;
+            LoadBalancingClient client = lbc;
             if (client != null)
             {
                 client.Service();
 
 
-                Text uiText = this.StateUiText;
+                Text uiText = StateUiText;
                 string state = client.State.ToString();
                 if (uiText != null && !uiText.text.Equals(state))
                 {
@@ -63,7 +62,7 @@ namespace Photon.Realtime.Demo
         public void OnConnectedToMaster()
         {
             Debug.Log("OnConnectedToMaster");
-            this.lbc.OpJoinRandomRoom();    // joins any open room (no filter)
+            _ = lbc.OpJoinRandomRoom();    // joins any open room (no filter)
         }
 
         public void OnDisconnected(DisconnectCause cause)
@@ -82,7 +81,7 @@ namespace Photon.Realtime.Demo
         public void OnRegionListReceived(RegionHandler regionHandler)
         {
             Debug.Log("OnRegionListReceived");
-            regionHandler.PingMinimumOfRegions(this.OnRegionPingCompleted, null);
+            _ = regionHandler.PingMinimumOfRegions(OnRegionPingCompleted, null);
         }
 
         public void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -125,7 +124,7 @@ namespace Photon.Realtime.Demo
         public void OnJoinRandomFailed(short returnCode, string message)
         {
             Debug.Log("OnJoinRandomFailed");
-            this.lbc.OpCreateRoom(new EnterRoomParams());
+            _ = lbc.OpCreateRoom(new EnterRoomParams());
         }
 
         public void OnLeftRoom()
@@ -139,7 +138,7 @@ namespace Photon.Realtime.Demo
         {
             Debug.Log("OnRegionPingCompleted " + regionHandler.BestRegion);
             Debug.Log("RegionPingSummary: " + regionHandler.SummaryToCache);
-            this.lbc.ConnectToRegionMaster(regionHandler.BestRegion.Code);
+            _ = lbc.ConnectToRegionMaster(regionHandler.BestRegion.Code);
         }
     }
 }

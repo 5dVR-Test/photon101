@@ -1,5 +1,5 @@
-using UnityEngine;
 using Photon.Pun;
+using UnityEngine;
 
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -12,11 +12,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
 
 
-    void Start()
+    private void Start()
     {
         Debug.Log("Connecting...");
 
-        PhotonNetwork.ConnectUsingSettings();
+        _ = PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -26,7 +26,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log("Connected to Server");
 
 
-        PhotonNetwork.JoinLobby();
+        _ = PhotonNetwork.JoinLobby();
     }
 
     public override void OnJoinedLobby()
@@ -35,7 +35,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         Debug.Log("We're conneted and in lobby");
 
-        PhotonNetwork.JoinOrCreateRoom("LazyGame", null, null);
+        _ = PhotonNetwork.JoinOrCreateRoom("LazyGame", null, null);
 
 
     }
@@ -48,7 +48,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         GameObject _player = PhotonNetwork.Instantiate(player.name, spawnPoint.position, Quaternion.identity);
 
-        _player.GetComponent<PlayerSetup>().IsLocalPlayer(); 
+        _player.GetComponent<PlayerSetup>().IsLocalPlayer();
     }
 
 }
