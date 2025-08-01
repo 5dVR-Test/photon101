@@ -1,16 +1,22 @@
 using Photon.Pun;
 using UnityEngine;
+using TMPro;
 
 public class Health : MonoBehaviour
 {
-    public int currentHealth;
+    public int health;
+
+    [Header("UI")]
+    public TextMeshProUGUI healthText;
 
     [PunRPC]
     public void ApplyDamage(int damageAmount)
     {
-        currentHealth -= damageAmount;
+        health -= damageAmount;
 
-        if (currentHealth <= 0)
+        healthText.text = health.ToString();
+
+        if (health <= 0)
         {
             Destroy(gameObject);
         }
